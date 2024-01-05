@@ -19,12 +19,12 @@ jobs:
         run: docker build -t rust-builder .
 
       - name: Run tests in Docker container
-        run: docker run -v ${{ github.workspace }}/reproducible-test:/host rust-builder /bin/bash /host/test.sh
+        run: docker run --name rust-builder-container -v ${{ github.workspace }}/reproducible-test:/host rust-builder /bin/bash /host/test.sh
 
       - name: Calculate SHA hash of build output
         id: hash_output1
         run: |
-          docker cp rust-builder:/host/target/wasm32-unknown-unknown/release/. /tmp/output1
+          docker cp rust-builder-container:/host/target/wasm32-unknown-unknown/release/. /tmp/output1
           wasm_file=$(ls /tmp/output1/*.wasm | head -n 1)
           if [ -z "$wasm_file" ]; then
             echo "No WASM file found."
@@ -45,12 +45,12 @@ jobs:
         run: docker build -t rust-builder .
 
       - name: Run tests in Docker container
-        run: docker run -v ${{ github.workspace }}/reproducible-test:/host rust-builder /bin/bash /host/test.sh
+        run: docker run --name rust-builder-container -v ${{ github.workspace }}/reproducible-test:/host rust-builder /bin/bash /host/test.sh
 
       - name: Calculate SHA hash of build output
         id: hash_output1
         run: |
-          docker cp rust-builder:/host/target/wasm32-unknown-unknown/release/. /tmp/output1
+          docker cp rust-builder-container:/host/target/wasm32-unknown-unknown/release/. /tmp/output1
           wasm_file=$(ls /tmp/output1/*.wasm | head -n 1)
           if [ -z "$wasm_file" ]; then
             echo "No WASM file found."
