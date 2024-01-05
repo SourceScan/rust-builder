@@ -100,8 +100,8 @@ jobs:
         with:
           images: ${{ secrets.DOCKER_HUB_REPO }}
           tags: |
-            type=raw,value=${{ steps.branch_name.outputs.branch }}
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
+
       
       - name: Build and push Docker image
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
