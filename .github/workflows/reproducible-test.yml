@@ -16,10 +16,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t my-rust-builder .
+        run: docker build -t rust-builder .
 
       - name: Run tests in Docker container
-        run: docker run -v ${{ github.workspace }}/reproducible-test:/host my-rust-builder /bin/bash /host/reproducible-test/test.sh
+        run: docker run -v ${{ github.workspace }}/reproducible-test:/host rust-builder /bin/bash /host/reproducible-test/test.sh
 
       - name: Calculate SHA hash of build output
         id: hash_output1
@@ -42,10 +42,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t my-rust-builder .
+        run: docker build -t rust-builder .
 
       - name: Run tests in Docker container
-        run: docker run -v ${{ github.workspace }}/reproducible-test:/host my-rust-builder /bin/bash /host/reproducible-test/test.sh
+        run: docker run -v ${{ github.workspace }}/reproducible-test:/host rust-builder /bin/bash /host/reproducible-test/test.sh
 
       - name: Calculate SHA hash of build output
         id: hash_output1
