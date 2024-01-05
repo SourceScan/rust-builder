@@ -3,11 +3,11 @@ name: Publish Docker image
 on:
   workflow_run:
     workflows: ["Build and Compare Docker Images"]
+    types:
+      - completed
     branches:
       - main
       - '*'
-    types:
-      - completed
       
 jobs:
   push_to_registry:
