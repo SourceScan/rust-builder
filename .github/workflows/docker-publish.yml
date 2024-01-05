@@ -25,7 +25,7 @@ jobs:
       - name: Calculate SHA hash of build output
         id: hash_output
         run: |
-          docker cp rust-builder-container:/host/target/wasm32-unknown-unknown/release/. /tmp/output1
+          docker cp rust-builder-container:/host/target/near/. /tmp/output1
           wasm_file=$(ls /tmp/output1/*.wasm | head -n 1)
           if [ -z "$wasm_file" ]; then
             echo "No WASM file found."
@@ -52,7 +52,7 @@ jobs:
       - name: Calculate SHA hash of build output
         id: hash_output
         run: |
-          docker cp rust-builder-container:/host/target/wasm32-unknown-unknown/release/. /tmp/output1
+          docker cp rust-builder-container:/host/target/near/. /tmp/output1
           wasm_file=$(ls /tmp/output1/*.wasm | head -n 1)
           if [ -z "$wasm_file" ]; then
             echo "No WASM file found."
