@@ -3,6 +3,9 @@ name: Publish Docker image
 on:
   workflow_run:
     workflows: ["Build and Compare Docker Images"]
+    branches:
+      - main
+      - '*'
     types:
       - completed
       
