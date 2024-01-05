@@ -1,0 +1,74 @@
+name: Build and Compare Docker Images
+
+on:
+  push:
+    branches:
+      - 'main'
+      - '[0-9]+.[0-9]+.[0-9]+-*'
+
+jobs:
+  build_1:
+    runs-on: ubuntu-latest
+    outputs:
+      hash1: ${{ steps.hash_output1.outputs.sha_hash }}
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t my-rust-builder .
+
+      - name: Run tests in Docker container
+        run: docker run -v ${{ github.workspace }}/reproducible-test:/host my-rust-builder /bin/bash /host/reproducible-test/test.sh
+
+      - name: Calculate SHA hash of build output
+        id: hash_output1
+        run: |
+          docker cp container_name:/host/target/wasm32-unknown-unknown/release/. /tmp/output1
+          wasm_file=$(ls /tmp/output1/*.wasm | head -n 1)
+          if [ -z "$wasm_file" ]; then
+            echo "No WASM file found."
+            exit 1
+          fi
+          sha_hash=$(sha256sum "$wasm_file" | awk '{ print $1 }')
+          echo "::set-output name=sha_hash::$sha_hash"
+
+  build_2:
+    runs-on: ubuntu-latest
+    outputs:
+      hash2: ${{ steps.hash_output2.outputs.sha_hash }}
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t my-rust-builder .
+
+      - name: Run tests in Docker container
+        run: docker run -v ${{ github.workspace }}/reproducible-test:/host my-rust-builder /bin/bash /host/reproducible-test/test.sh
+
+      - name: Calculate SHA hash of build output
+        id: hash_output1
+        run: |
+          docker cp container_name:/host/target/wasm32-unknown-unknown/release/. /tmp/output1
+          wasm_file=$(ls /tmp/output1/*.wasm | head -n 1)
+          if [ -z "$wasm_file" ]; then
+            echo "No WASM file found."
+            exit 1
+          fi
+          sha_hash=$(sha256sum "$wasm_file" | awk '{ print $1 }')
+          echo "::set-output name=sha_hash::$sha_hash"
+
+
+  compare_outputs:
+    runs-on: ubuntu-latest
+    needs: [build_1, build_2]
+    steps:
+      - name: Compare SHA hashes
+        run: |
+          if [ "${{ needs.build_1.outputs.hash1 }}" == "${{ needs.build_2.outputs.hash2 }}" ]; then
+            echo "Builds are reproducible."
+          else
+            echo "Builds differ."
+            exit 1
+          fi
