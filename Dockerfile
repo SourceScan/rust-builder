@@ -1,4 +1,4 @@
-FROM amd64/rust:1.69.0
+FROM amd64/rust:1.73.0
 
 ENV RUSTFLAGS='-C link-arg=-s'
 
