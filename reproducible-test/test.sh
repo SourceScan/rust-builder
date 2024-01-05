@@ -4,4 +4,4 @@
 cd /host
 
 # Run your cargo build command or any other commands
-cargo build --all --target wasm32-unknown-unknown --release
+cargo near build
