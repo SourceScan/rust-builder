@@ -19,7 +19,7 @@ jobs:
         run: docker build -t rust-builder .
 
       - name: Run tests in Docker container
-        run: docker run -v ${{ github.workspace }}/reproducible-test:/host rust-builder /bin/bash ${{ github.workspace }}/reproducible-test/test.sh
+        run: docker run -v ${{ github.workspace }}/reproducible-test:/host rust-builder /bin/bash /host/test.sh
 
       - name: Calculate SHA hash of build output
         id: hash_output1
@@ -45,7 +45,7 @@ jobs:
         run: docker build -t rust-builder .
 
       - name: Run tests in Docker container
-        run: docker run -v ${{ github.workspace }}/reproducible-test:/host rust-builder /bin/bash ls /host
+        run: docker run -v ${{ github.workspace }}/reproducible-test:/host rust-builder /bin/bash /host/test.sh
 
       - name: Calculate SHA hash of build output
         id: hash_output1
